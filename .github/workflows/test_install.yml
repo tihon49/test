@@ -12,24 +12,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Install dependencies
         run: |
+          set -e  # Остановить выполнение при ошибках
+          echo "Updating packages..."
           sudo apt update && sudo apt upgrade -y
-          sudo useradd -s /bin/bash -d /opt/aero -m aero
-          sudo chmod +x /opt/aero
+          echo "Creating user 'aero'..."
+          sudo useradd -s /bin/bash -d /opt/aero -m aero || echo "User 'aero' might already exist"
+          echo "Configuring sudoers..."
           echo "aero ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/aero
-          sudo -u aero -i
+          echo "Installing git..."
           sudo apt install git -y
-          git clone https://github.com/Aerodisk/openvair.git
+          sudo mkdir -p /opt/aero
+          sudo chown -R aero:aero /opt/aero
+
+      - name: Clone OpenVair repository
+        run: |
+          echo "Cloning OpenVair repository..."
+          sudo -u aero git clone https://github.com/Aerodisk/openvair.git /opt/aero/openvair
 
       - name: Modify config file
         run: |
-          sed -i "/\[default_user\]/,/^$/s/^login = .*/login = 'userrrr77'/; s/^password = .*/password = 'passsss77'/" /opt/aero/openvair/project_config.toml
+          echo "Modifying config file..."
+          sudo -u aero sed -i "/\[default_user\]/,/^$/s/^login = .*/login = 'userrrr77'/; s/^password = .*/password = 'passsss77'/" /opt/aero/openvair/project_config.toml
 
       - name: Run installation script
         run: |
-          ./openvair/install.sh
+          echo "Running installation script..."
+          sudo -u aero bash /opt/aero/openvair/install.sh
 
