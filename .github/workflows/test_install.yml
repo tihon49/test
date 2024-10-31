@@ -29,7 +29,7 @@ jobs:
       - name: Clone OpenVair repository
         run: |
           echo "Cloning OpenVair repository..."
-          sudo -u aero git clone https://github.com/Aerodisk/openvair.git /opt/aero/openvair
+          sudo -u aero git clone https://github.com/tihon49/test.git /opt/aero/openvair
 
       - name: Modify config file
         run: |

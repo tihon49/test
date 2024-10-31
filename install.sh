@@ -90,19 +90,6 @@ create_jwt_secret() {
     log $GREEN "JWT secret created successfully"
 }
 
-install_tmux_and_start_session() {
-    log $CYAN "Checking for tmux installation"
-    if ! command -v tmux &> /dev/null; then
-        check_or_install "tmux"
-    fi
-
-    if [[ -z "$TMUX" ]]; then
-        log $CYAN "Starting script in tmux session"
-        tmux new-session -d -s install_session "bash $0 tmux"
-        tmux attach -t install_session
-        exit 0
-    fi
-}
 
 verify_user_data() {
     # Check user credentials
@@ -776,7 +763,6 @@ create_default_user() {
 
 # Run the main installation steps
 main() {
-    install_tmux_and_start_session
     verify_user_data
     create_jwt_secret
     get_os_type
@@ -818,9 +804,3 @@ main() {
 
 main
 
-# Check if script is running inside the tmux session
-if [[ "$1" == "tmux" ]]; then
-    # Press any key to exit tmux session
-    read -n 1 -s -r -p "Press any key to exit tmux session"
-    exit 0
-fi
