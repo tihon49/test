@@ -199,6 +199,7 @@ restart_service "cups.service"
 restart_service "NetworkManager.service"
 restart_service "packagekit.service"
 restart_service "systemd-resolved.service"
+echo "test"
 
 # ========= Unmount directories =========
 umount_project_paths(){
