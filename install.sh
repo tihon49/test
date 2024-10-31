@@ -300,14 +300,14 @@ run_postgres_container() {
 
 # Create database function
 create_database() {
-    local command="sudo docker exec -it $DOCKER_CONTAINER_NAME psql -U $USER -c 'CREATE DATABASE $DATABASE_NAME;'"
+    local command="sudo docker exec $DOCKER_CONTAINER_NAME psql -U $USER -c 'CREATE DATABASE $DATABASE_NAME;'"
     local message="Creating database $DATABASE_NAME"
     execute "$command" "$message"
 }
 
 # Grant privileges function
 grant_privileges() {
-    local command="sudo docker exec -it $DOCKER_CONTAINER_NAME psql -U $USER -c 'GRANT ALL PRIVILEGES ON DATABASE $DATABASE_NAME TO $USER;'"
+    local command="sudo docker exec $DOCKER_CONTAINER_NAME psql -U $USER -c 'GRANT ALL PRIVILEGES ON DATABASE $DATABASE_NAME TO $USER;'"
     local message="Granting privileges on database $DATABASE_NAME to user $USER"
     execute "$command" "$message"
 }
@@ -682,7 +682,7 @@ print(hash)
 # Create default user
 create_default_user() {
     local message="Createing default user"
-    local command="sudo docker exec -it $DOCKER_CONTAINER_NAME \
+    local command="sudo docker exec $DOCKER_CONTAINER_NAME \
         psql -U $USER -d $DATABASE_NAME -c \"INSERT INTO users \
         (id, username, password) \
         VALUES ('6777383c-56c3-44b3-8243-2fd5b819d3c9', '$LOGIN', \
@@ -757,7 +757,7 @@ print_final_message() {
 
 create_default_user() {
     log $CYAN "Creating default user"
-    sudo docker exec -it $DOCKER_CONTAINER_NAME psql -U $USER -d $DATABASE_NAME -c "INSERT INTO users VALUES ('0b677738-34ff-4f9e-b1f6-5962065c0207', '$LOGIN', NULL, 't', '$HASHED_PASSWORD')" || stop_script "Failure while adding deafault user"
+    sudo docker exec $DOCKER_CONTAINER_NAME psql -U $USER -d $DATABASE_NAME -c "INSERT INTO users VALUES ('0b677738-34ff-4f9e-b1f6-5962065c0207', '$LOGIN', NULL, 't', '$HASHED_PASSWORD')" || stop_script "Failure while adding deafault user"
     log $GREEN "Default user was added successfully"
 }
 
